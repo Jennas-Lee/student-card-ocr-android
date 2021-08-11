@@ -7,8 +7,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 object KakaoRetrofitClient {
 //    private var instance: Retrofit? = null
     private val gson = GsonBuilder().setLenient().create()
-    private const val BASE_URL = "https://dapi.kakao.com/"
+//    private const val BASE_URL = "https://dapi.kakao.com/"
+    private const val BASE_URL = "http://54.81.158.48:5000/"
     var api: KakaoRetrofitService
+    var retrofit: Retrofit
 
 //    fun getInstance(): Retrofit {
 //        if (instance == null) {
@@ -22,7 +24,7 @@ object KakaoRetrofitClient {
 //    }
 
     init {
-        val retrofit: Retrofit = Retrofit.Builder()
+        retrofit = Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()

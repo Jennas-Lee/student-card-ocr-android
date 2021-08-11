@@ -19,6 +19,7 @@ import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.nio.ByteBuffer
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var outputDirectory: File
     private lateinit var cameraExecuter: ExecutorService
+    private lateinit var showProgress: ShowProgress
+    private lateinit var socket: CallSocketApi
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,6 +46,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
+        showProgress = ShowProgress(findViewById(R.id.progressBar), findViewById(R.id.progressMessage))
+        showProgress.startProgress()
+        socket = CallSocketApi()
+
         val camera_capture_button: ImageButton = findViewById(R.id.camera_capture_button)
         camera_capture_button.setOnClickListener { takePhoto() }
 
@@ -54,60 +61,41 @@ class MainActivity : AppCompatActivity() {
     private fun takePhoto() {
         val imageCapture = imageCapture ?: return
 
-        imageCapture.takePicture(
-            ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageCapturedCallback() {
-                override fun onError(exception: ImageCaptureException) {
-                    Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
-                }
+        showProgress.setProgress(10, "사진 촬영중")
 
-                @SuppressLint("UnsafeOptInUsageError")
-                override fun onCaptureSuccess(imageProxy: ImageProxy) {
-                    super.onCaptureSuccess(imageProxy)
+        socket.connect()
 
-                    val image: Image? = imageProxy.image
+        socket.send("ping!")
 
-                    val mainProcess: MainProcess = MainProcess()
+        socket.disconnect()
 
-                    var imageBytes: MultipartBody.Part? = null
-                    if (image != null) {
-                        imageBytes = mainProcess.imageToBytes(image)
-                    }
-
-                    if (imageBytes != null) {
-                        mainProcess.callKakaoAPI(imageBytes)
-                    }
-
-//                    val planes: Array<out Image.Plane>? = image?.planes
-//                    val yBuffer: ByteBuffer = planes!![0].buffer
-//                    val uBuffer: ByteBuffer = planes!![1].buffer
-//                    val vBuffer: ByteBuffer = planes!![2].buffer
+//        imageCapture.takePicture(
+//            ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageCapturedCallback() {
+//                override fun onError(exception: ImageCaptureException) {
+//                    Log.e(TAG, "Photo capture failed: ${exception.message}", exception)
+//                }
 //
-//                    val ySize: Int = yBuffer.remaining()
-//                    val uSize: Int = uBuffer.remaining()
-//                    val vSize: Int = vBuffer.remaining()
+//                @SuppressLint("UnsafeOptInUsageError")
+//                override fun onCaptureSuccess(imageProxy: ImageProxy) {super.onCaptureSuccess(imageProxy)
 //
-//                    val nv21: ByteArray = byteArrayOf((ySize + uSize + vSize).toByte())
+//                    val image: Image? = imageProxy.image
 //
-//                    yBuffer.get(nv21, 0, ySize)
-//                    vBuffer.get(nv21, ySize, vSize)
-//                    vBuffer.get(nv21, ySize + vSize, uSize)
+//                    showProgress.setProgress(20, "사진 처리중")
+//                    val mainProcess: MainProcess = MainProcess()
 //
-//                    val yuvImage: YuvImage =
-//                        YuvImage(nv21, ImageFormat.NV21, image.width, image.height, null)
-//                    val out: ByteArrayOutputStream = ByteArrayOutputStream()
-//                    yuvImage.compressToJpeg(Rect(0, 0, yuvImage.width, yuvImage.height), 75, out)
+//                    var imageBytes: String? = null
+//                    if (image != null) {
+//                        imageBytes = mainProcess.imageToBytes(image)
+//                    }
 //
-//                    val imageBytes: ByteArray = out.toByteArray()
-//                    // end
+//                    if (imageBytes != null) {
+//                        mainProcess.callKakaoAPI(imageBytes)
+//                    }
 //
-//
-//                    val buffer: ByteBuffer = image.planes[0].buffer
-//                    val bytes: ByteArray = byteArrayOf(buffer.capacity().toByte())
-//                    val byte = buffer.capacity().toByte()
-//                    val stream: ByteArrayOutputStream = ByteArrayOutputStream()
-                }
-            }
-        )
+//                    showProgress.setProgress(30, "사진 전송중")
+//                }
+//            }
+//        )
     }
 
     private fun startCamera() {
@@ -207,5 +195,11 @@ class MainActivity : AppCompatActivity() {
         view.apply {
             layoutParams = params
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+
+        socket.disconnect()
     }
 }

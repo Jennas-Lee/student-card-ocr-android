@@ -4,14 +4,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".MainActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <androidx.camera.view.PreviewView
             android:id="@+id/viewFinder"
@@ -23,156 +23,108 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:layout_weight="1">
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/nameTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:layout_marginStart="20sp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="25sp"-->
-<!--                tools:text="이름" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/nameEditTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="20sp"-->
-<!--                android:layout_weight="3"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="none" />-->
-<!--        </LinearLayout>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/majorTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:layout_marginStart="20sp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="25sp"-->
-<!--                tools:text="학과" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/majorEditTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="20sp"-->
-<!--                android:layout_weight="3"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="none" />-->
-<!--        </LinearLayout>-->
-
-<!--        <LinearLayout-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:orientation="horizontal">-->
-
-<!--            <TextView-->
-<!--                android:id="@+id/numberTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_gravity="center_vertical"-->
-<!--                android:layout_marginStart="20sp"-->
-<!--                android:layout_weight="1"-->
-<!--                android:gravity="center"-->
-<!--                android:textSize="25sp"-->
-<!--                tools:text="고유번호" />-->
-
-<!--            <EditText-->
-<!--                android:id="@+id/numberEditTextView"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_marginEnd="20sp"-->
-<!--                android:layout_weight="3"-->
-<!--                android:ems="10"-->
-<!--                android:inputType="none"-->
-<!--                tools:ignore="TextFields" />-->
-<!--        </LinearLayout>-->
+        android:layout_weight="1"
+        android:orientation="vertical">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginStart="25sp">
+            android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/nameTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:text="이름" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="25sp"
+                android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/majorTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:text="학과" />
+                <TextView
+                    android:id="@+id/nameTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="이름"
+                    android:textSize="25sp" />
 
-            <TextView
-                android:id="@+id/numberTextView"
+                <TextView
+                    android:id="@+id/majorTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="학과"
+                    android:textSize="25sp" />
+
+                <TextView
+                    android:id="@+id/numberTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:layout_gravity="center_vertical"
+                    android:gravity="center"
+                    android:text="고유번호"
+                    android:textSize="25sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:text="고유번호" />
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="25sp"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/nameEditTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none" />
+
+                <EditText
+                    android:id="@+id/majorEditTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none" />
+
+                <EditText
+                    android:id="@+id/numberEditTextView"
+                    android:layout_width="match_parent"
+                    android:layout_height="50sp"
+                    android:ems="10"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:inputType="none"
+                    tools:ignore="TextFields" />
+
+            </LinearLayout>
 
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginEnd="25sp">
+            android:layout_marginTop="20sp"
+            android:orientation="vertical">
 
-            <EditText
-                android:id="@+id/nameEditTextView"
+            <ProgressBar
+                android:id="@+id/progressBar"
+                style="?android:attr/progressBarStyleHorizontal"
                 android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:ems="10"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none" />
+                android:layout_height="wrap_content"
+                android:layout_marginStart="10sp"
+                android:layout_marginEnd="10sp"
+                android:visibility="invisible"/>
 
-            <EditText
-                android:id="@+id/majorEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:ems="10"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none" />
-
-            <EditText
-                android:id="@+id/numberEditTextView"
-                android:layout_width="match_parent"
-                android:layout_height="50sp"
-                android:ems="10"
-                android:focusable="false"
-                android:focusableInTouchMode="false"
-                android:inputType="none"
-                tools:ignore="TextFields" />
+            <TextView
+                android:id="@+id/progressMessage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:layout_gravity="center"/>
 
         </LinearLayout>
 
