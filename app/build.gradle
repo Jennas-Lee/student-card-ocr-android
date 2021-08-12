@@ -61,4 +61,6 @@ dependencies {
     implementation('io.socket:socket.io-client:1.0.0') {
         exclude group: 'org.json', module: 'json'
     }
+
+    implementation 'org.java-websocket:Java-WebSocket:1.5.1'
 }
