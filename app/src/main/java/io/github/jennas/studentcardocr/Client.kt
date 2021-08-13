@@ -22,14 +22,19 @@ class Client(uri: URI, progress: ShowProgress) : WebSocketClient(uri) {
         if (message != null) {
             val jsonObject: JSONObject = JSONObject(message)
 
-            this.progress!!.setProgress(jsonObject.getInt("progress"), jsonObject.getString("message"))
+            this.progress!!.setProgress(
+                jsonObject.getInt("progress"),
+                jsonObject.getString("message")
+            )
 
 //            Log.i("WebSocket", message)
         }
+
     }
 
     override fun onClose(code: Int, reason: String?, remote: Boolean) {
         Log.i("WebSocket", "CLOSE")
+        this.progress!!.setError("연결 종료")
     }
 
     override fun onError(e: Exception?) {

@@ -15,7 +15,6 @@ import androidx.camera.core.*
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.core.content.ContextCompat
-import java.io.File
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 
@@ -38,17 +37,10 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        showProgress = ShowProgress(findViewById(R.id.progressBar), findViewById(R.id.progressMessage))
-        showProgress.startProgress()
+        showProgress =
+            ShowProgress(findViewById(R.id.progressBar), findViewById(R.id.progressMessage))
 
-        try {   // 소켓 연결 성공 시
-            socket = Client(java.net.URI("ws://192.168.137.1:5000"), showProgress) // URL
-            socket.connect()
-
-            showProgress.setProgress(0, "연결 완료")
-        } catch (e: Exception) {    // 소켓 연결 실패 시
-            showProgress.setError("연결 실패")
-        }
+        connectSocket()
 
         val camera_capture_button: ImageButton = findViewById(R.id.camera_capture_button)
         camera_capture_button.setOnClickListener { takePhoto() }
@@ -57,9 +49,18 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun takePhoto() {
-        val imageCapture = imageCapture ?: return
+        if (!socket.isOpen) {
+            showProgress.setProgress(0, "연결 시도중")
+            connectSocket()
+
+            if (!socket.isOpen) {
+                return
+            }
+        }
 
         showProgress.setProgress(10, "사진 촬영중")
+
+        val imageCapture = imageCapture ?: return
 
         imageCapture.takePicture(
             ContextCompat.getMainExecutor(this), object : ImageCapture.OnImageCapturedCallback() {
@@ -69,32 +70,21 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 @SuppressLint("UnsafeOptInUsageError")
-                override fun onCaptureSuccess(imageProxy: ImageProxy) {super.onCaptureSuccess(imageProxy)
+                override fun onCaptureSuccess(imageProxy: ImageProxy) {
+                    super.onCaptureSuccess(imageProxy)
 
                     val image: Image? = imageProxy.image
 
                     showProgress.setProgress(20, "사진 촬영 성공")
                     showProgress.setProgress(30, "사진 처리중")
-                    val mainProcess: MainProcess = MainProcess(socket, showProgress)
+                    val mainProcess: MainProcess = MainProcess(socket, showProgress, image)
 
                     if (image != null) {
-                        mainProcess.main(image)
+                        mainProcess.start()
                     }
-
-//                    showProgress.setProgress(30, "사진 전송중")
                 }
             }
         )
-
-        showProgress.setProgress(20, "연결중")
-
-//        socket.connect()
-
-        socket.send("ping!")
-
-//        socket.close()
-
-//        showProgress.setProgress(100, "웹소켓 테스트 로직 종료")
     }
 
     private fun startCamera() {
@@ -138,6 +128,29 @@ class MainActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(
             baseContext, it
         ) == PackageManager.PERMISSION_GRANTED
+    }
+
+    private fun connectSocket() {
+        // TODO: Need Modify Exception Logic
+        try {
+            // 소켓 연결 성공 시
+            showProgress.setProgress(0, "연결 시도중")
+            socket = Client(java.net.URI("ws://XXX.XXX.XXX.XXX"), showProgress) // URL
+            socket.connect()
+            Thread.sleep(500)
+            socket.send("{\"process\": 0}")
+        } catch (e: Exception) {
+            if (e.toString() == "org.java_websocket.exceptions.WebsocketNotConnectedException") {
+                // 소켓 연결 실패 시
+                showProgress.setError("연결 실패")
+                Log.e("WebSocketConnectionError", e.toString())
+            } else {
+                // 소켓 연결 오류 시
+                showProgress.setError("연결 오류")
+                Log.e("WebSocketConnectionError", e.toString())
+            }
+            socket.close()
+        }
     }
 
     override fun onDestroy() {

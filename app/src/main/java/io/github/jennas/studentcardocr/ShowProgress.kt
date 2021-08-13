@@ -1,20 +1,12 @@
 package io.github.jennas.studentcardocr
 
-import android.graphics.*
 import android.os.Build
-import android.view.View
 import android.widget.ProgressBar
 import android.widget.TextView
-import androidx.core.graphics.toColor
 import android.graphics.PorterDuff
-
-import android.R.color
-
 import android.graphics.BlendMode
-
 import android.graphics.BlendModeColorFilter
-
-
+import android.graphics.Color
 
 
 class ShowProgress(progressBar: ProgressBar, progressMessage: TextView) {
@@ -26,20 +18,30 @@ class ShowProgress(progressBar: ProgressBar, progressMessage: TextView) {
         this.progressMessage = progressMessage
     }
 
-    fun startProgress() {
-        progressBar!!.visibility = View.VISIBLE
-        progressMessage!!.visibility = View.VISIBLE
-        progressMessage!!.text = "연결중"
-    }
-
     fun setProgress(progress: Int, message: String) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            progressBar!!.progressDrawable.setColorFilter(
+                BlendModeColorFilter(
+                    Color.BLUE,
+                    BlendMode.SRC_ATOP
+                )
+            )
+        } else {
+            progressBar!!.progressDrawable.setColorFilter(Color.BLUE, PorterDuff.Mode.SRC_ATOP)
+        }
         progressBar!!.progress = progress
         progressMessage!!.text = message
+        progressMessage!!.setTextColor(Color.BLUE)
     }
 
     fun setError(message: String) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            progressBar!!.progressDrawable.setColorFilter(BlendModeColorFilter(Color.RED, BlendMode.SRC_ATOP))
+            progressBar!!.progressDrawable.setColorFilter(
+                BlendModeColorFilter(
+                    Color.RED,
+                    BlendMode.SRC_ATOP
+                )
+            )
         } else {
             progressBar!!.progressDrawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_ATOP)
         }
